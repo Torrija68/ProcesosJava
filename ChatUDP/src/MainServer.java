@@ -1,28 +1,54 @@
+import javax.xml.crypto.Data;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
+import java.net.*;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MainServer {
+    int puerto = 8888;
+    String direccion = "230.0.0.0";
     private MulticastSocket msk;
-    private InetAddress address;
-    List<ManejadorClientes> listaClientes;
+    private InetAddress grupo;
+    DatagramPacket envio;
+    DatagramPacket receptor;
+    byte[] bufferEnvio = new byte[256];
+    byte[] bufferReceptor = new byte[256];
+    List<Integer> clientes;
 
-    public MainServer(int puerto){
-        listaClientes = new CopyOnWriteArrayList<>();
+    public MainServer(){
         try {
-            msk = new MulticastSocket(puerto);
-            address = InetAddress.getByName("255.0.0.1");
+            msk = new MulticastSocket();
+            grupo = InetAddress.getByName(direccion);
+            System.out.println("Esperando cliente");
 
-            while (true){
+            Thread HiloReceptor = new Thread(() -> {
+                    try {
+                        while (true) {
+                            receptor = new DatagramPacket(bufferReceptor, bufferReceptor.length);
+                            msk.receive(receptor);
 
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                });
+            HiloReceptor.start();
+
+
+            } catch (UnknownHostException ex) {
+            throw new RuntimeException(ex);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
+
+
     }
+
     public static void main(String[] args) {
-        new MainServer(5000);
+        new MainServer();
     }
 }
+
+
