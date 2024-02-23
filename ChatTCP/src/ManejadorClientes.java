@@ -63,8 +63,6 @@ public class ManejadorClientes extends Thread {
         }
     }
 
-
-
     public void enviarMensaje(String mensaje) {
         try {
             dos = new DataOutputStream(sk.getOutputStream());

@@ -10,7 +10,6 @@ import java.net.Socket;
 public class Cliente extends JFrame implements ActionListener{
     private String nombre;
     private int puerto;
-    private boolean existe;
     private Socket conexion;
     private DataInputStream dis;
     private DataOutputStream dos;
